@@ -469,7 +469,7 @@ async function reanalyzeTrackedSubmissions() {
   await loadPage();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initPage() {
   ["filter-preT0", "filter-bulk", "filter-merge", "sort-select"].forEach((id) => {
     document.getElementById(id).addEventListener("change", () => renderSummaryTable(window.__summaryRows || []));
   });
@@ -480,4 +480,10 @@ document.addEventListener("DOMContentLoaded", () => {
   loadPage().catch((error) => {
     document.querySelector("#summary-table tbody").innerHTML = `<tr><td colspan="12"><div class="empty-state">Failed to load admin data: ${escapeHtml(error.message)}</div></td></tr>`;
   });
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initPage);
+} else {
+  initPage();
+}

@@ -207,8 +207,14 @@ async function loadPage() {
   document.getElementById("submit-score").addEventListener("click", submitJudgeScore);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    loadPage().catch((error) => {
+      document.getElementById("submit-status").textContent = error.message;
+    });
+  });
+} else {
   loadPage().catch((error) => {
     document.getElementById("submit-status").textContent = error.message;
   });
-});
+}
