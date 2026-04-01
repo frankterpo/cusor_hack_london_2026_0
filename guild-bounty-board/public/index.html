@@ -763,6 +763,66 @@
             color: #0b0b0b;
         }
 
+        /* Judges */
+        .judges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .judge-card {
+            border: 3px solid var(--border-color);
+            background: #101010;
+            padding: 18px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .judge-card:hover {
+            border-color: var(--accent-green);
+            box-shadow: 4px 4px 0 rgba(61, 255, 163, 0.15);
+        }
+
+        .judge-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            object-fit: cover;
+            image-rendering: auto;
+            filter: grayscale(30%);
+            transition: filter 0.2s;
+        }
+
+        .judge-card:hover .judge-photo {
+            filter: grayscale(0%);
+            border-color: var(--accent-green);
+        }
+
+        .judge-name {
+            font-size: 0.55rem;
+            color: var(--accent-green);
+            letter-spacing: 2px;
+        }
+
+        .judge-org {
+            font-family: 'VT323', monospace;
+            font-size: 1.05rem;
+            color: #888;
+        }
+
+        @media (max-width: 720px) {
+            .judges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         /* Eric section */
         .eric-section {
             margin-top: 24px;
@@ -1063,6 +1123,33 @@
                     <div class="prize-reward">3 MONTHS</div>
                     <div class="prize-tier">Cursor Pro+</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Judges -->
+        <div class="panel" id="judges-panel">
+            <div class="panel-title">Judges</div>
+            <div class="judges-grid">
+                <a href="https://x.com/DanPerks" target="_blank" rel="noreferrer" class="judge-card">
+                    <img src="judge-dan.png" alt="Dan" class="judge-photo">
+                    <div class="judge-name">DAN</div>
+                    <div class="judge-org">Cursor</div>
+                </a>
+                <a href="https://x.com/davidgelberg" target="_blank" rel="noreferrer" class="judge-card">
+                    <img src="judge-david.png" alt="David" class="judge-photo">
+                    <div class="judge-name">DAVID</div>
+                    <div class="judge-org">10 Downing Street</div>
+                </a>
+                <a href="https://x.com/Monaca97" target="_blank" rel="noreferrer" class="judge-card">
+                    <img src="judge-francesco.png" alt="Francesco" class="judge-photo">
+                    <div class="judge-name">FRANCESCO</div>
+                    <div class="judge-org">Giant Ventures</div>
+                </a>
+                <a href="https://www.linkedin.com/in/peter-devlin/" target="_blank" rel="noreferrer" class="judge-card">
+                    <img src="judge-peter.png" alt="Peter" class="judge-photo">
+                    <div class="judge-name">PETER</div>
+                    <div class="judge-org">Hummingbird Ventures</div>
+                </a>
             </div>
         </div>
 
