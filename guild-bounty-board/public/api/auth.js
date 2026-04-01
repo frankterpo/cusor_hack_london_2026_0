@@ -1,5 +1,16 @@
-const { sendJson, parseRequestBody } = require("./_lib/storage");
+const { sendJson } = require("./_lib/storage");
 const { getSitePassword, createToken, verifyAuth, setAuthCookie } = require("./_lib/auth");
+
+function getBody(req) {
+  if (!req.body) return {};
+  if (typeof req.body === "object" && !Buffer.isBuffer(req.body)) return req.body;
+  try {
+    const str = Buffer.isBuffer(req.body) ? req.body.toString("utf-8") : String(req.body);
+    return str ? JSON.parse(str) : {};
+  } catch (_) {
+    return {};
+  }
+}
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
@@ -13,12 +24,7 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === "POST") {
-      let body = {};
-      try {
-        body = parseRequestBody(req) || {};
-      } catch (_) {
-        return sendJson(res, 400, { ok: false, error: "Invalid JSON" });
-      }
+      const body = getBody(req);
       const password = String(body.password || "").trim();
 
       if (!password) {
