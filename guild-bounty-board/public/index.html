@@ -763,6 +763,104 @@
             color: #0b0b0b;
         }
 
+        /* Prizes */
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .prize-card {
+            border: 3px solid var(--border-color);
+            background: #101010;
+            padding: 24px 18px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prize-card--1st {
+            border-color: var(--gold);
+            box-shadow: 4px 4px 0 rgba(241, 196, 15, 0.2), inset 0 0 30px rgba(241, 196, 15, 0.03);
+        }
+
+        .prize-card--2nd {
+            border-color: #aaa;
+            box-shadow: 4px 4px 0 rgba(170, 170, 170, 0.15);
+        }
+
+        .prize-card--3rd {
+            border-color: #cd7f32;
+            box-shadow: 4px 4px 0 rgba(205, 127, 50, 0.15);
+        }
+
+        .prize-place {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        .prize-card--1st .prize-place { color: var(--gold); }
+        .prize-card--2nd .prize-place { color: #ccc; }
+        .prize-card--3rd .prize-place { color: #cd7f32; }
+
+        .prize-trophy {
+            font-size: 2rem;
+            line-height: 1;
+            image-rendering: pixelated;
+        }
+
+        .prize-card--1st .prize-trophy { color: var(--gold); text-shadow: 0 0 12px rgba(241, 196, 15, 0.4); }
+        .prize-card--2nd .prize-trophy { color: #ccc; }
+        .prize-card--3rd .prize-trophy { color: #cd7f32; }
+
+        .prize-reward {
+            font-size: 0.55rem;
+            color: var(--accent-green);
+            letter-spacing: 1px;
+        }
+
+        .prize-tier {
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            color: #999;
+        }
+
+        @media (max-width: 720px) {
+            .prizes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 8-bit pinched fingers backdrop */
+        .panel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: "\1F90C";
+            position: absolute;
+            font-size: 14rem;
+            right: -30px;
+            bottom: -40px;
+            opacity: 0.025;
+            image-rendering: pixelated;
+            filter: grayscale(100%);
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(-15deg);
+        }
+
+        .panel > * {
+            position: relative;
+            z-index: 1;
+        }
+
         /* Ambient scanlines */
         body::before {
             content: "";
@@ -877,6 +975,31 @@
         <div class="panel" id="coin-panel"></div>
 
         <!-- Tech Partners -->
+        <!-- Prizes -->
+        <div class="panel" id="prizes-panel">
+            <div class="panel-title">Prizes</div>
+            <div class="prizes-grid">
+                <div class="prize-card prize-card--1st">
+                    <div class="prize-place">1ST</div>
+                    <div class="prize-trophy">&#9733;</div>
+                    <div class="prize-reward">6 MONTHS</div>
+                    <div class="prize-tier">Cursor Pro+</div>
+                </div>
+                <div class="prize-card prize-card--2nd">
+                    <div class="prize-place">2ND</div>
+                    <div class="prize-trophy">&#9733;</div>
+                    <div class="prize-reward">4 MONTHS</div>
+                    <div class="prize-tier">Cursor Pro+</div>
+                </div>
+                <div class="prize-card prize-card--3rd">
+                    <div class="prize-place">3RD</div>
+                    <div class="prize-trophy">&#9733;</div>
+                    <div class="prize-reward">3 MONTHS</div>
+                    <div class="prize-tier">Cursor Pro+</div>
+                </div>
+            </div>
+        </div>
+
         <div class="panel" id="partners-panel">
             <div class="panel-title">Tech Partners</div>
             <div class="partners-grid">
