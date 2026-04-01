@@ -863,27 +863,29 @@
         }
 
         .eric-tweets {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
         }
 
         .eric-tweet-link {
             display: block;
-            border: 2px solid #333;
+            border: 2px solid #282828;
             transition: border-color 0.2s, box-shadow 0.2s;
-            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+            max-width: 280px;
+            opacity: 0.85;
         }
 
         .eric-tweet-link:hover {
             border-color: var(--accent-green);
-            box-shadow: 4px 4px 0 rgba(61, 255, 163, 0.15);
+            box-shadow: 3px 3px 0 rgba(61, 255, 163, 0.1);
+            opacity: 1;
         }
 
         .eric-tweet-img {
             width: 100%;
             display: block;
-            image-rendering: auto;
         }
 
         /* Prizes */
@@ -1382,7 +1384,7 @@
                         <span class="eric-subtitle">The ideas that never shipped &mdash; until now.</span>
                     </div>
                     <div class="eric-desc">
-                        <a href="https://x.com/ericzakariasson" target="_blank" rel="noreferrer" style="color:var(--accent-green);text-decoration:none;">Eric Zakariasson</a>, Cursor&rsquo;s CEO, has been publicly sketching features, side projects, and wild ideas he never got around to building. This hackathon is your chance to make them real. Here&rsquo;s a taste of what&rsquo;s been living in his head:
+                        <a href="https://x.com/ericzakariasson" target="_blank" rel="noreferrer" style="color:var(--accent-green);text-decoration:none;">Eric</a> keeps tweeting things he wants built but never ships them himself. Your job is to actually build them. Here&rsquo;s what he&rsquo;s been posting:
                     </div>
                     <div class="eric-tweets">
                         <a href="https://x.com/ericzakariasson" target="_blank" rel="noreferrer" class="eric-tweet-link">
