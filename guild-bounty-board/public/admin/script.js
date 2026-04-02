@@ -139,11 +139,13 @@ function renderJudgeCell(info) {
   }
   const avg = Number((info.averages && info.averages.grand_total) ?? info.average_score ?? 0).toFixed(1);
   const maxScore = info.legacy_mode ? "" : '<span class="judge-chip-max">/130</span>';
+  const judgeNames = info.responses.map(r => escapeHtml(r.judge_name || "?")).join(", ");
   const judgeLabel = info.responses.length === 1 ? "1 judge" : `${info.responses.length} judges`;
   return `
     <span class="judge-chip">
       <span class="judge-chip-score">${avg}${maxScore}</span>
       <span class="judge-chip-meta">${judgeLabel}</span>
+      <span class="judge-chip-names" style="display:block;font-size:0.7rem;color:#888;margin-top:2px;">${judgeNames}</span>
     </span>
   `;
 }
