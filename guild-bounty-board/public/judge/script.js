@@ -1,5 +1,6 @@
 let judgeConfig = null;
 let submissions = [];
+let judgedRepoKeys = new Set();
 
 async function fetchJson(url) {
   const response = await fetch(url, { cache: "no-store", credentials: "same-origin" });
@@ -53,9 +54,12 @@ function renderScoreFields() {
 
 function renderSubmissions() {
   const select = document.getElementById("submission-select");
-  select.innerHTML = submissions.map((submission) => `
-    <option value="${escapeHtml(submission.repo_url)}">${escapeHtml(submission.project_name || submission.repo_url)}</option>
-  `).join("");
+  select.innerHTML = submissions.map((submission) => {
+    const repoKey = (submission.repo_url || "").trim().replace(/\.git$/i, "").toLowerCase();
+    const judged = judgedRepoKeys.has(repoKey);
+    const label = (submission.project_name || submission.repo_url) + (judged ? " [SCORED]" : "");
+    return `<option value="${escapeHtml(submission.repo_url)}">${escapeHtml(label)}</option>`;
+  }).join("");
   renderScoreFields();
   renderSubmissionSummary();
 }
@@ -179,8 +183,9 @@ async function submitJudgeScore() {
     return;
   }
 
-  // Cache judge name for next submission
+  // Cache judge name and mark as judged
   localStorage.setItem("judge_name", judgeName);
+  judgedRepoKeys.add((submission.repo_url || "").trim().replace(/\.git$/i, "").toLowerCase());
 
   setSubmitStatus("Score submitted! Ready for next project.");
 
@@ -191,7 +196,8 @@ async function submitJudgeScore() {
   document.getElementById("judge-notes").value = "";
   updateTotals();
 
-  // Move to next submission in dropdown
+  // Update dropdown to show [SCORED] and move to next
+  renderSubmissions();
   const select = document.getElementById("submission-select");
   if (select.selectedIndex < select.options.length - 1) {
     select.selectedIndex += 1;
@@ -208,11 +214,24 @@ async function loadPage() {
   renderSubmissions();
   updateTotals();
 
-  // Restore cached judge name
+  // Restore cached judge name and load their existing scores
   const cachedName = localStorage.getItem("judge_name");
   if (cachedName) {
     document.getElementById("judge-name").value = cachedName;
   }
+
+  try {
+    const judgeData = await fetchJson("/api/judges");
+    const judgeName = (cachedName || "").trim().toLowerCase();
+    if (judgeName && judgeData.responses) {
+      for (const r of judgeData.responses) {
+        if ((r.judge_name || "").trim().toLowerCase() === judgeName) {
+          judgedRepoKeys.add((r.repo_url || "").trim().replace(/\.git$/i, "").toLowerCase());
+        }
+      }
+      renderSubmissions();
+    }
+  } catch (_) {}
 
   const handleScoreInput = (event) => {
     if (event.target.classList.contains("score-input") || event.target.classList.contains("track-score-input") || event.target.classList.contains("core-score")) {
