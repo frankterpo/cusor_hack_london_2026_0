@@ -36,7 +36,7 @@ export default function Home() {
 
             {/* CTA Button */}
             <a
-              href="/credits/redeem"
+              href="/credits/event/cursor-hackathon-london-2026/redeem"
               className="block w-full py-4 px-6 text-center text-sm transition-all duration-200 hover:opacity-85"
               style={{
                 background: 'linear-gradient(180deg, #3dffa3 0%, #1db86e 100%)',
