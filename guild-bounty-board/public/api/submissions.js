@@ -107,8 +107,6 @@ module.exports = async (req, res) => {
         analysis.ai_error = aiError.message || "AI analysis failed";
       }
 
-      await upsertAnalysis(submission.repo_key, analysis);
-
       const summaryRow = analysis.summary_row || {};
       nextSubmission = {
         ...nextSubmission,
@@ -121,6 +119,7 @@ module.exports = async (req, res) => {
         ai_model: analysis.ai_model || "",
         ai_generated_at: analysis.ai_generated_at || null,
         ai_error: analysis.ai_error || "",
+        _analysisData: analysis,
         total_commits: summaryRow.total_commits || 0,
         total_commits_before_t0: summaryRow.total_commits_before_t0 || 0,
         total_commits_during_event: summaryRow.total_commits_during_event || 0,
@@ -141,6 +140,10 @@ module.exports = async (req, res) => {
     }
 
     const saved = await upsertSubmission(nextSubmission);
+    // Save analysis after submission exists (FK constraint)
+    if (nextSubmission._analysisData) {
+      try { await upsertAnalysis(submission.repo_key, nextSubmission._analysisData); } catch (_) {}
+    }
     const submissions = await getSubmissions();
     return sendJson(res, 200, { ok: true, submission: saved, submissions });
   } catch (error) {
