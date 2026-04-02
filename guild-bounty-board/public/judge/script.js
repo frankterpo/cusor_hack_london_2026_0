@@ -179,10 +179,26 @@ async function submitJudgeScore() {
     return;
   }
 
-  setSubmitStatus("Score submitted successfully. Redirecting to Hack Manager...");
-  window.setTimeout(() => {
-    window.location.href = `/admin?refresh=${Date.now()}`;
-  }, 700);
+  // Cache judge name for next submission
+  localStorage.setItem("judge_name", judgeName);
+
+  setSubmitStatus("Score submitted! Ready for next project.");
+
+  // Reset form but keep judge name
+  document.querySelectorAll(".bonus-score").forEach(input => { input.value = "0"; });
+  const mainTrackInput = document.getElementById("main-track-score");
+  if (mainTrackInput) mainTrackInput.value = "0";
+  document.getElementById("judge-notes").value = "";
+  updateTotals();
+
+  // Move to next submission in dropdown
+  const select = document.getElementById("submission-select");
+  if (select.selectedIndex < select.options.length - 1) {
+    select.selectedIndex += 1;
+    renderScoreFields();
+    renderSubmissionSummary();
+    updateTotals();
+  }
 }
 
 async function loadPage() {
@@ -191,6 +207,12 @@ async function loadPage() {
   submissions = submissionsPayload.submissions || [];
   renderSubmissions();
   updateTotals();
+
+  // Restore cached judge name
+  const cachedName = localStorage.getItem("judge_name");
+  if (cachedName) {
+    document.getElementById("judge-name").value = cachedName;
+  }
 
   const handleScoreInput = (event) => {
     if (event.target.classList.contains("score-input") || event.target.classList.contains("track-score-input") || event.target.classList.contains("core-score")) {
