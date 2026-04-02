@@ -49,7 +49,7 @@ export function AttendeeAutocomplete({
     onAttendeeSelect(exactMatch);
     
     // Show suggestions if typing
-    setIsOpen(newValue.length >= 2);
+    setIsOpen(newValue.length >= 1);
     setFocusedIndex(-1);
   };
 
@@ -121,7 +121,7 @@ export function AttendeeAutocomplete({
           value={value}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => value.length >= 2 && setIsOpen(true)}
+          onFocus={() => value.length >= 1 && setIsOpen(true)}
           disabled={disabled || isLoading}
           className={error ? 'border-red-500' : ''}
         />
@@ -165,7 +165,7 @@ export function AttendeeAutocomplete({
       )}
 
       {/* No results message */}
-      {isOpen && value.length >= 2 && suggestions.length === 0 && !isLoading && (
+      {isOpen && value.length >= 1 && suggestions.length === 0 && !isLoading && (
         <div className="absolute z-50 mt-1 w-full rounded-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
           <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
             No attendees found matching "{value}"

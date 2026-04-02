@@ -55,16 +55,17 @@ export function useAttendees(projectId?: string) {
     ) || null;
   };
 
-  // Get name suggestions based on partial input
+  // Get name suggestions based on partial input (matches any word in the search against any part of the name)
   const getNameSuggestions = (input: string): AttendeeForSuggestion[] => {
-    if (!input || input.length < 2) return [];
-    
-    const searchTerm = input.toLowerCase().trim();
+    if (!input || input.length < 1) return [];
+
+    const searchWords = input.toLowerCase().trim().split(/\s+/).filter(w => w.length > 0);
     return availableAttendees
-      .filter(attendee => 
-        attendee.name.toLowerCase().includes(searchTerm)
-      )
-      .slice(0, 5); // Limit to 5 suggestions for UX
+      .filter(attendee => {
+        const name = attendee.name.toLowerCase();
+        return searchWords.every(word => name.includes(word));
+      })
+      .slice(0, 10);
   };
 
   return {

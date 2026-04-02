@@ -17,7 +17,7 @@ export default function RedeemPage() {
               Enter your details to receive your Cursor credits
             </p>
           </div>
-          <RedemptionForm />
+          <RedemptionForm projectId="4ULX4IY2qIMwnKe7x1LK" />
         </div>
       </div>
     </div>
