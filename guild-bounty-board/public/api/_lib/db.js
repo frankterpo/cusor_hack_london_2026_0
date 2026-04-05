@@ -62,6 +62,7 @@ async function upsertSubmission(row) {
     has_large_initial_commit_after_t0: row.has_large_initial_commit_after_t0 || 0,
     has_merge_commits: row.has_merge_commits || 0,
     default_branch: row.default_branch || "",
+    uses_white_circle: row.uses_white_circle === true,
   };
   const result = await supabaseRest("/submissions?on_conflict=repo_key", {
     method: "POST",

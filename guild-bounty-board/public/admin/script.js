@@ -262,7 +262,7 @@ async function renderSummaryTable(rows) {
   updateStats(rows);
 
   if (filteredRows.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="12"><div class="empty-state">No submissions match the current filters.</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13"><div class="empty-state">No submissions match the current filters.</div></td></tr>`;
     return;
   }
 
@@ -294,6 +294,7 @@ async function renderSummaryTable(rows) {
       <td style="text-align:center">${flagChip(row.has_bulk_commits)}</td>
       <td style="text-align:center">${flagChip(row.has_large_initial_commit_after_t0)}</td>
       <td style="text-align:center">${flagChip(row.has_merge_commits)}</td>
+      <td style="text-align:center">${(submission?.uses_white_circle || row.uses_white_circle) ? '<span style="color:#3dffa3;font-weight:bold;">YES</span>' : '<span style="color:#555;">NO</span>'}</td>
       <td>${getAIPreview(aiText)}</td>
     `;
     tr.addEventListener("click", () => openDrawer(repoId));
@@ -479,7 +480,7 @@ function initPage() {
   document.getElementById("analysis-settings-form").addEventListener("submit", saveAnalysisSettings);
   document.getElementById("reanalyze-submissions").addEventListener("click", reanalyzeTrackedSubmissions);
   loadPage().catch((error) => {
-    document.querySelector("#summary-table tbody").innerHTML = `<tr><td colspan="12"><div class="empty-state">Failed to load admin data: ${escapeHtml(error.message)}</div></td></tr>`;
+    document.querySelector("#summary-table tbody").innerHTML = `<tr><td colspan="13"><div class="empty-state">Failed to load admin data: ${escapeHtml(error.message)}</div></td></tr>`;
   });
 }
 

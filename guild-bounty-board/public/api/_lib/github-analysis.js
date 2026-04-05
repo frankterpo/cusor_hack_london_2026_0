@@ -275,6 +275,18 @@ function buildSummaryRow(repoId, repoUrl, defaultBranch, metrics, t0, t1) {
   };
 }
 
+async function searchRepoForWhiteCircle(owner, repo) {
+  try {
+    const query = `whitecircle+repo:${owner}/${repo}`;
+    const response = await fetch(`https://api.github.com/search/code?q=${query}`, { headers: getGitHubHeaders() });
+    if (!response.ok) return false;
+    const data = await response.json();
+    return (data.total_count || 0) > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
 async function analyzeGitHubRepo(repoUrl, settingsOverride = null) {
   const settings = settingsOverride || await getAnalysisSettings();
   const parsedRepo = parseRepoUrl(repoUrl);
@@ -290,6 +302,7 @@ async function analyzeGitHubRepo(repoUrl, settingsOverride = null) {
   const t1 = parseIsoDatetime(settings.event_t1);
   const metrics = computeMetrics(commitDetails, t0, t1, settings);
   const commits = metrics.commits.map((commit) => ({ ...commit, repo_id: parsedRepo.repoId }));
+  const usesWhiteCircle = await searchRepoForWhiteCircle(parsedRepo.owner, parsedRepo.repo);
 
   return {
     repo_id: parsedRepo.repoId,
@@ -312,6 +325,7 @@ async function analyzeGitHubRepo(repoUrl, settingsOverride = null) {
     flags: metrics.flags,
     analysis_settings: settings,
     commits,
+    uses_white_circle: usesWhiteCircle,
     summary_row: buildSummaryRow(parsedRepo.repoId, parsedRepo.normalizedUrl, defaultBranch, metrics, t0, t1),
   };
 }
