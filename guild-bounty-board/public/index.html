@@ -1137,11 +1137,7 @@
         <h1>GUILD BOUNTY BOARD</h1>
         <div class="subtitle">Mission: Build Eric's Software Factory</div>
         <div class="admin-link-row">
-            <a class="admin-link" href="https://discord.gg/SMEf7xXrb" target="_blank" rel="noreferrer">DISCORD</a>
-            <button class="admin-link" id="open-submit-modal" type="button">SUBMIT PROJECT</button>
-            <a class="admin-link admin-link--gold" href="/judge">JUDGE PROJECTS</a>
-            <a class="admin-link" href="/admin">ORGANIZER ADMIN</a>
-            <a class="admin-link" href="https://cursor-hackathon-timer.vercel.app/" target="_blank" rel="noreferrer">CURSOR CLOCK</a>
+            <button class="admin-link admin-link--gold" id="open-submissions-modal" type="button">ALL SUBMISSIONS</button>
         </div>
     </div>
 
@@ -1241,6 +1237,16 @@
                     <a href="https://cursor.com" target="_blank" rel="noreferrer" class="partner-link partner-link--gold">CURSOR.COM &rarr;</a>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-shell" id="submissions-modal">
+        <div class="modal-card" style="width:min(900px,100%);max-height:85vh;overflow-y:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div class="modal-title" style="margin:0;">ALL SUBMISSIONS</div>
+                <button class="modal-btn modal-btn--close" id="close-submissions-modal" type="button" style="width:auto;">CLOSE</button>
+            </div>
+            <div id="submissions-list" style="display:flex;flex-direction:column;gap:12px;"></div>
         </div>
     </div>
 
@@ -1571,7 +1577,8 @@
             }
         }
 
-        document.getElementById('open-submit-modal').addEventListener('click', openSubmitModal);
+        const submitBtn = document.getElementById('open-submit-modal');
+        if (submitBtn) submitBtn.addEventListener('click', openSubmitModal);
         document.getElementById('close-submit-modal').addEventListener('click', closeSubmitModal);
         document.getElementById('submit-modal').addEventListener('click', (event) => {
             if (event.target.id === 'submit-modal') {
@@ -1598,6 +1605,50 @@
             document.getElementById('tweet-modal').classList.remove('is-open');
         }
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeTweetModal(); });
+
+        async function loadSubmissionsModal() {
+            const list = document.getElementById('submissions-list');
+            list.innerHTML = '<div style="color:#888;font-family:VT323,monospace;font-size:1.15rem;text-align:center;padding:20px;">Loading...</div>';
+            try {
+                const res = await fetch('/api/public-submissions', { cache: 'no-store' });
+                const data = await res.json();
+                const subs = data.submissions || [];
+                if (subs.length === 0) {
+                    list.innerHTML = '<div style="color:#888;font-family:VT323,monospace;font-size:1.15rem;text-align:center;padding:20px;">No submissions yet.</div>';
+                    return;
+                }
+                list.innerHTML = subs.map(s => `
+                    <div style="border:2px solid #282828;padding:14px;display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <div style="color:var(--accent-green);font-size:0.55rem;font-family:'Press Start 2P',monospace;">${esc((s.project_name || 'Untitled').toUpperCase())}</div>
+                            ${s.uses_white_circle ? '<span style="font-size:0.5rem;color:#3dffa3;border:1px solid #3dffa3;padding:2px 6px;font-family:Press Start 2P,monospace;">WC</span>' : ''}
+                        </div>
+                        ${s.description ? `<div style="color:#ccc;font-family:VT323,monospace;font-size:1.05rem;font-style:italic;">${esc(s.description)}</div>` : ''}
+                        <div style="color:#888;font-family:VT323,monospace;font-size:1rem;">Team: ${esc(s.team_name || '?')}${s.team_members ? ' · ' + esc(s.team_members) : ''}</div>
+                        <div style="color:#666;font-family:VT323,monospace;font-size:0.95rem;">Track: ${esc(s.chosen_track || '?')}</div>
+                        <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
+                            ${s.repo_url ? `<a href="${esc(s.repo_url)}" target="_blank" rel="noreferrer" style="color:var(--accent-green);border:1px solid var(--accent-green);padding:4px 10px;text-decoration:none;font-family:VT323,monospace;font-size:0.95rem;">REPO &rarr;</a>` : ''}
+                            ${s.demo_url ? `<a href="${esc(s.demo_url)}" target="_blank" rel="noreferrer" style="color:var(--gold);border:1px solid var(--gold);padding:4px 10px;text-decoration:none;font-family:VT323,monospace;font-size:0.95rem;">DEMO &rarr;</a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div style="color:#ff4444;font-family:VT323,monospace;font-size:1.1rem;text-align:center;padding:20px;">Failed to load submissions.</div>';
+            }
+        }
+
+        document.getElementById('open-submissions-modal').addEventListener('click', async () => {
+            document.getElementById('submissions-modal').classList.add('is-open');
+            await loadSubmissionsModal();
+        });
+        document.getElementById('close-submissions-modal').addEventListener('click', () => {
+            document.getElementById('submissions-modal').classList.remove('is-open');
+        });
+        document.getElementById('submissions-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'submissions-modal') {
+                document.getElementById('submissions-modal').classList.remove('is-open');
+            }
+        });
 
         loadBounties();
 
